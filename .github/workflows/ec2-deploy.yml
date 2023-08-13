@@ -44,6 +44,4 @@ jobs:
         run: |
           echo "${{ secrets.GIT_PRIVATE_KEY }}" > private_key
           chmod 600 private_key
-          echo "${{ secrets.EC2_KNOWN_HOSTS }}" > /home/runner/.ssh/known_hosts
-          chmod 600 /home/runner/.ssh/known_hosts
-          ssh -v ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "git fetch && git checkout main && git pull origin main"
+          ssh -v -o StrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "git fetch && git checkout main && git pull origin main"
