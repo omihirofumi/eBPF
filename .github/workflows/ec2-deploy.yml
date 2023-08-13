@@ -45,4 +45,6 @@ jobs:
           ls
           echo "${{ secrets.GIT_PRIVATE_KEY }}" > private_key
           chmod 600 private_key
-          ssh -v -o StrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "git fetch && git checkout main && git pull origin main"
+          rsync --checksum -av --exclude '.git' --include '.*' ./ \
+          -e "ssh -o StrictHostKeyChecking=no -i private_key" \
+          ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }}:~
