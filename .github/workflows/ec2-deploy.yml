@@ -45,6 +45,6 @@ jobs:
           ls
           echo "${{ secrets.GIT_PRIVATE_KEY }}" > private_key
           chmod 600 private_key
-          rsync --checksum -av --exclude '.git' --include '.*' ./ \
+          rsync --checksum --delete -av --exclude '.git' --exclude 'private_key' --include '.*' ./ \
           -e "ssh -o StrictHostKeyChecking=no -i private_key" \
           ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }}:~
