@@ -1,16 +1,15 @@
-# This is a sample Python script.
+#!/usr/bin/python3
+from bcc import BPF
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+program = r"""
+int hello(void *ctx) {
+    bpf_trace_printk("Hello World!");
+    return 0;
+}
+"""
 
+b = BPF(text=program)
+syscall = b.get_syscall_fnname("execve")
+b.attach_kprobe(event=syscall, fn_name="hello")
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('demo')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+b.trace_print()
